@@ -1,7 +1,7 @@
 import os
 
 # TOKENS
-TELEG_TOKEN = "6188934519:AAHJvS_EiGhMIS1R1hCrAcIlS_FaphqK9nU"
+TELEG_TOKEN = ""
 
 ADMIN_TOKEN = "revf67d88gv576e7f8r9hfwjwfj98h7r7"
 
