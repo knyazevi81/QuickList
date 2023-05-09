@@ -1,9 +1,8 @@
 import os
 # @mirea_ninja_search_students_bot search student
 
-
 # TOKENS
-TELEG_TOKEN = "6188934519:AAHJvS_EiGhMIS1R1hCrAcIlS_FaphqK9nU"  # SECRET
+TELEG_TOKEN = ""  # SECRET
 
 ADMIN_TOKEN = "revf67d88gv576e7f8r9hfwjwfj98h7r7"
 
