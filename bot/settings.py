@@ -2,7 +2,7 @@ import os
 # @mirea_ninja_search_students_bot search student
 
 # TOKENS
-TELEG_TOKEN = ""  # SECRET
+TELEG_TOKEN = "6188934519:AAHJvS_EiGhMIS1R1hCrAcIlS_FaphqK9nU"  # SECRET
 
 ADMIN_TOKEN = "revf67d88gv576e7f8r9hfwjwfj98h7r7"
 
@@ -16,7 +16,7 @@ lessons = [
     ''
 ]
 
-LAST_MESSAGE = []  # Clear list
-LAST_USER = []
+test_tokens = ["tokkjb242j23k4hb", "tokj2bh4jh23n4", "tok98yfg9w8f"]
+
 
 ADMIN_ID = 782697565
