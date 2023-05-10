@@ -1,4 +1,5 @@
 import sqlite3
+import settings
 
 
 def main():
@@ -17,8 +18,10 @@ def main():
     cursor.execute('''
     CREATE TABLE IF NOT EXISTS tasks(
     id INTEGER PRIMARY KEY,
-    type_lesson TEXT,
-    text_work TEXT
+    text_work TEXT,
+    date TEXT,
+    type_activity TEXT,
+    type_notif TEXT
     )
     ''')
 
@@ -37,6 +40,13 @@ def main():
     activity TEXT
     )
     ''')
+
+    have_keys = cursor.execute('SELECT * FROM token').fetchall()
+
+    if not have_keys:
+        for key in settings.test_tokens:
+            data = (key, 'false')
+            cursor.execute('INSERT INTO token(token_id, activity) VALUES(?,?)', data)
 
     connect.commit()
     connect.close()
