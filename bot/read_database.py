@@ -2,6 +2,7 @@ import sqlite3
 
 
 class Database:
+    """функция добавления аи токенов """
     def __init__(self, db_name):
         self.connect = sqlite3.connect(db_name)
         self.cursor = self.connect.cursor()
@@ -35,5 +36,15 @@ class Database:
                 return True
             else:
                 return False
+
+    def is_ai_assistent(self, user_id) -> bool:
+        with self.connect:
+            artint = self.cursor.execute(f"SELECT activity FROM profiles WHERE profile_id = {user_id}").fetchone()
+            if artint[0] == "true":
+                return True
+            else:
+                return False
+
+
 
 
