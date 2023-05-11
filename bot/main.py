@@ -12,13 +12,15 @@ import settings
 from read_database import Database
 
 """ First settings. """
-bot = Bot(settings.TELEG_TOKEN)
+
+bot = Bot(settings.TELEG_TOKEN, proxy=settings.PROXY_URL)
 dp = Dispatcher(bot)
 db = Database(settings.PATH_TO_DB)
 
 openai.api_key = settings.OPEN_AI_TOKEN
 model_engine = 'text-davinci-003'
 max_tokens = 128
+
 
 
 # _______Keyboards_______
