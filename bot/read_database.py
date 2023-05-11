@@ -9,11 +9,11 @@ class Database:
 
     def add_user(self, user_id: int, user_username: str):
         with self.connect:
-            data = (int(user_id), user_username, "false", "false")
+            data = (int(user_id), user_username, "false", "false", "true")
             self.cursor.execute("INSERT INTO "
                                 "profiles(profile_id, profile_username,"
-                                " activity, super_user)"
-                                "VALUES(?,?,?,?)", data)
+                                " activity, super_user, notifiers)"
+                                "VALUES(?,?,?,?,?)", data)
             self.connect.commit()
 
     def quest_user_in_db(self, user_id: int) -> bool:
@@ -37,13 +37,68 @@ class Database:
             else:
                 return False
 
-    def is_ai_assistent(self, user_id) -> bool:
+    def get_ai(self, user_id: int, token: str) -> bool:
+        true_token = self.cursor.execute(f"SELECT activity FROM token WHERE token_id = '{token}'").fetchone()
+        if 'false' in true_token:
+            self.cursor.execute(f"UPDATE profiles SET activity = ? WHERE profile_id = {user_id}", ('true',))
+            return True
+        else:
+            return False
+
+    def is_ai_assistent(self, user_id: int) -> bool:
         with self.connect:
             artint = self.cursor.execute(f"SELECT activity FROM profiles WHERE profile_id = {user_id}").fetchone()
             if artint[0] == "true":
                 return True
             else:
                 return False
+
+    def now_tasks_num(self, user_id: int) -> int:
+        with self.connect:
+            return len(self.how_undone_tasks(user_id))
+
+    def how_undone_tasks(self, user_id):
+        with self.connect:
+            with self.connect:
+                data = self.cursor.execute(f"""SELECT id, text_work 
+                                               FROM tasks 
+                                               WHERE type_activity = 'false' AND user_id = {user_id}
+                                            """).fetchall()
+                return data
+
+    def add_task(self, user_id: int, text_task: str):
+        with self.connect:
+            data = (user_id, text_task, "none", 'false', 'false')
+            self.cursor.execute("""INSERT INTO tasks(user_id, text_work, date, type_activity, type_notif) 
+                                   VALUES(?, ?, ?, ?, ?) 
+                                   """, data)
+            self.connect.commit()
+
+    def del_task(self, user_id: int, task_id: int):
+        with self.connect:
+            temp_bool = False
+            data = self.how_undone_tasks(user_id)
+            for id_task, text_task in data:
+                if id_task == task_id:
+                    temp_bool = True
+            self.cursor.execute(f"DELETE FROM tasks WHERE user_id = {user_id} AND id = {task_id}")
+            self.connect.commit()
+            return temp_bool
+
+    def update_notifier(self, user_id: int) -> bool:
+        with self.connect:
+            notif = self.cursor.execute(f"SELECT notifiers FROM profiles WHERE profile_id = {user_id}").fetchone()
+            if "true" in notif:
+                self.cursor.execute(f"UPDATE profiles SET notifiers = ? WHERE profile_id = {user_id}", ("false",))
+                return False
+            else:
+                self.cursor.execute(f"UPDATE profiles SET notifiers = ? WHERE profile_id = {user_id}", ("true",))
+                return True
+
+    def all_user_to_notifier(self):
+        data = self.cursor.execute("SELECT profile_id FROM profiles WHERE notifiers = 'true'").fetchall()
+        return data
+
 
 
 
