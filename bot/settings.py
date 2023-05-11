@@ -9,7 +9,7 @@ ADMIN_TOKEN = "revf67d88gv576e7f8r9hfwjwfj98h7r7"
 
 AUTH_TOKEN = "dv6df5687fv6df76dfv8vfd45vfd6"
 
-OPEN_AI_TOKEN = "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"
+OPEN_AI_TOKEN = ""  # SECRET
 
 
 # PATHS
