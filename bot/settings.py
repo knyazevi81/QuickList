@@ -3,7 +3,7 @@ import datetime
 # @mirea_ninja_search_students_bot search student
 
 # TOKENS
-TELEG_TOKEN = ""  # SECRET
+TELEG_TOKEN = "6188934519:AAHJvS_EiGhMIS1R1hCrAcIlS_FaphqK9nU"  # SECRET
 
 ADMIN_TOKEN = "revf67d88gv576e7f8r9hfwjwfj98h7r7"
 
@@ -15,9 +15,11 @@ OPEN_AI_TOKEN = "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"
 # PATHS
 PATH_TO_DB = os.path.join(os.getcwd(), "telegram_base.db")
 
-WIND_PATH = 'cd venv/Scripts && activate && cd .. && cd .. && cd bot && python '
+WIND_PATH = 'cd venv/Scripts && activate && cd .. && cd .. && cd bot && '
 
-NIX_PATH = 'source venv/bin/activate && cd bot && python '
+NIX_PATH = 'source venv/bin/activate && cd bot && '
+
+PROXY_URL = "http://proxy.server:3128"
 
 # SET
 lessons = [
