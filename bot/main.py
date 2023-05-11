@@ -22,7 +22,6 @@ model_engine = 'text-davinci-003'
 max_tokens = 128
 
 
-
 # _______Keyboards_______
 def auth_keyboad() -> InlineKeyboardMarkup:
     return InlineKeyboardMarkup(row_width=1).add(
@@ -142,13 +141,13 @@ async def del_task_db(message: types.Message):
     if db.update_notifier(message.from_user.id):
         await bot.send_message(
             message.from_user.id,
-            "🔕 уведомления выключены",
+            "🔔 уведомления включены",
             reply_markup=double_main_button()
         )
     else:
         await bot.send_message(
             message.from_user.id,
-            "🔔 уведомления включены",
+            "🔕 уведомления выключены",
             reply_markup=double_main_button()
         )
 
