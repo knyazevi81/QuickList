@@ -11,13 +11,15 @@ def main():
     profile_id INTEGER,
     profile_username TEXT,
     activity TEXT,
-    super_user TEXT
+    super_user TEXT,
+    notifiers TEXT
     )
     ''')
 
     cursor.execute('''
     CREATE TABLE IF NOT EXISTS tasks(
     id INTEGER PRIMARY KEY,
+    user_id INTEGER,
     text_work TEXT,
     date TEXT,
     type_activity TEXT,
