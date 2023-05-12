@@ -13,7 +13,7 @@ from read_database import Database
 
 """ First settings. """
 
-bot = Bot(settings.TELEG_TOKEN, proxy=settings.PROXY_URL)
+bot = Bot(settings.TELEG_TOKEN, proxy=settings.PROXY_URL)  # proxy=settings.PROXY_URL
 dp = Dispatcher(bot)
 db = Database(settings.PATH_TO_DB)
 
@@ -31,7 +31,7 @@ def auth_keyboad() -> InlineKeyboardMarkup:
 
 def double_main_button() -> InlineKeyboardMarkup:
     return InlineKeyboardMarkup(row_width=1).add(
-        InlineKeyboardButton(text='главное меню', callback_data='double_main')
+        InlineKeyboardButton(text='🔙 Главное меню', callback_data='double_main')
     )
 
 
@@ -61,6 +61,15 @@ def main_button(user_id: int) -> InlineKeyboardMarkup:
                 InlineKeyboardButton(text='🚬 Задачи', callback_data='all_task'),
                 InlineKeyboardButton(text='👥 О нас', callback_data='about_us')
             )
+
+
+def admin_buttons():
+    return InlineKeyboardMarkup(row_width=1).add(
+        InlineKeyboardButton(text='👥 Юзеры', callback_data='users'),
+        InlineKeyboardButton(text='🔑 Все ключи', callback_data='all_tokens'),
+        InlineKeyboardButton(text='🔎 команды', callback_data='commands'),
+        InlineKeyboardButton(text='🔙 Главное меню', callback_data='double_main')
+    )
 
 
 # Основные хэндлер
@@ -137,7 +146,7 @@ async def del_task_db(message: types.Message):
 
 
 @dp.message_handler(commands="updatenotifies")
-async def del_task_db(message: types.Message):
+async def updatenotofiers(message: types.Message):
     if db.update_notifier(message.from_user.id):
         await bot.send_message(
             message.from_user.id,
@@ -158,16 +167,16 @@ async def main_handler(message: types.Message):
         db.add_user(message.from_user.id, message.from_user.username)
         await bot.send_message(
             message.from_user.id,
-            " ✅ Вы успешно зарегистрировались!\n"
-            "нажмите -> /menu"
+            " ✅ Вы успешно зарегистрировались!\n",
+            reply_markup=double_main_button()
         )
     elif message.text.split()[0] == settings.ADMIN_TOKEN and db.quest_user_in_db(
             message.from_user.id) and not db.is_admin(message.from_user.id):
         db.add_admin(message.from_user.id)
         await bot.send_message(
             message.from_user.id,
-            " ✅ Режим администратора активирован!\n"
-            "Нажмите -> /menu"
+            " ✅ Режим администратора активирован!\n",
+            reply_markup=double_main_button()
         )
     elif message.text[0:3] == 'tok' and message.chat.type == 'private':
         if db.get_ai(message.from_user.id, message.text):
@@ -284,6 +293,67 @@ async def double_main(call: types.CallbackQuery):
     )
 
 
+@dp.callback_query_handler(text="admin")
+async def admin(call: types.CallbackQuery):
+    await bot.delete_message(message_id=call.message.message_id - 1, chat_id=call.from_user.id)
+    await bot.edit_message_text(
+        message_id=call.message.message_id,
+        chat_id=call.from_user.id,
+        text="Вы находитесь в меню администратора",
+        reply_markup=admin_buttons()
+    )
+
+
+@dp.callback_query_handler(text="users")
+async def admin(call: types.CallbackQuery):
+    if db.is_admin(call.from_user.id):
+        data = db.all_users()
+        type_act = {
+            "true": "|-✅-|",
+            "false": "|-⛔-|"
+        }
+        type_not = {
+            "true": "|-🔔-|",
+            "false": "|-🔕-|"
+        }
+        out_data = "-(act)-|-(not)-|-(adm)-|-(username)-\n"
+        for user in data:
+            out_data += f"|{type_act[str(user[1])]}{type_not[user[2]]}{type_act[user[3]]}@{user[0]}|\n"
+
+        await bot.edit_message_text(
+            message_id=call.message.message_id,
+            chat_id=call.from_user.id,
+            text=out_data,
+            reply_markup=double_main_button()
+        )
+
+
+@dp.callback_query_handler(text="users")
+async def admin(call: types.CallbackQuery):
+    if db.is_admin(call.from_user.id):
+        pass
+
+
+
+@dp.callback_query_handler(text="all_tokens")
+async def admin(call: types.CallbackQuery):
+    if db.is_admin(call.from_user.id):
+        type_tok = {
+            "true": "|-✅-|",
+            "false": "|-⛔-|"
+        }
+        data = db.all_tokens()
+        out_data = '|-(act)-|---(token)---|\n'
+        for token in data:
+            out_data += f"{type_tok[token[1]]}{token[0]}\n"
+        await bot.edit_message_text(
+            message_id=call.message.message_id,
+            chat_id=call.from_user.id,
+            text=out_data,
+            reply_markup=double_main_button()
+        )
+
+
 @dp.callback_query_handler(text="all_task")
 async def about(call: types.CallbackQuery):
     await bot.delete_message(message_id=call.message.message_id - 1, chat_id=call.from_user.id)
@@ -305,7 +375,7 @@ async def about(call: types.CallbackQuery):
     await bot.edit_message_text(
         message_id=call.message.message_id,
         chat_id=call.from_user.id,
-        text=f'Знакомься @{call.from_user.first_name} это ИИ ChatGPT(3.5)\n'
+        text=f'Знакомься {call.from_user.first_name} это ИИ ChatGPT(3.5)\n'
         f'---------------------------------\n'
         f'❗ Старайтесь оканчивать ваши запросы к боту '
         f'восклицаетльным или вопросительным '
