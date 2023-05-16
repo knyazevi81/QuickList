@@ -41,6 +41,7 @@ class Database:
         true_token = self.cursor.execute(f"SELECT activity FROM token WHERE token_id = '{token}'").fetchone()
         if 'false' in true_token:
             self.cursor.execute(f"UPDATE profiles SET activity = ? WHERE profile_id = {user_id}", ('true',))
+            self.cursor.execute(f"UPDATE token SET activity = ? WHERE token_id = '{token}'", ('true',))
             return True
         else:
             return False
@@ -96,8 +97,19 @@ class Database:
                 return True
 
     def all_user_to_notifier(self):
-        data = self.cursor.execute("SELECT profile_id FROM profiles WHERE notifiers = 'true'").fetchall()
-        return data
+        with self.connect:
+            data = self.cursor.execute("SELECT profile_id FROM profiles WHERE notifiers = 'true'").fetchall()
+            return data
+
+    def all_users(self):
+        with self.connect:
+            data = self.cursor.execute("SELECT profile_username, activity, notifiers, super_user  FROM profiles").fetchall()
+            return data
+
+    def all_tokens(self):
+        with self.connect:
+            data = self.connect.execute("SELECT token_id, activity FROM token").fetchall()
+            return data
 
 
 

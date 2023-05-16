@@ -3,13 +3,13 @@ import datetime
 # @mirea_ninja_search_students_bot search student
 
 # TOKENS
-TELEG_TOKEN = ""  # SECRET
+TELEG_TOKEN = "6188934519:AAHJvS_EiGhMIS1R1hCrAcIlS_FaphqK9nU"  # SECRET
 
 ADMIN_TOKEN = "revf67d88gv576e7f8r9hfwjwfj98h7r7"
 
 AUTH_TOKEN = "dv6df5687fv6df76dfv8vfd45vfd6"
 
-OPEN_AI_TOKEN = ""  # SECRET
+OPEN_AI_TOKEN = "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"  # SECRET
 
 
 # PATHS

@@ -13,7 +13,7 @@ from read_database import Database
 
 """ First settings. """
 
-bot = Bot(settings.TELEG_TOKEN, proxy=settings.PROXY_URL)  # proxy=settings.PROXY_URL
+bot = Bot(settings.TELEG_TOKEN)  # proxy=settings.PROXY_URL
 dp = Dispatcher(bot)
 db = Database(settings.PATH_TO_DB)
 
