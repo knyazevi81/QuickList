@@ -197,22 +197,30 @@ async def main_handler(message: types.Message):
                 '💤💤Запрос выполнятеся, подождите немного...',
                 reply_to_message_id=message.message_id
             )
-            completion = openai.Completion.create(
-                engine=model_engine,
-                prompt=message.text,
-                max_tokens=1024,
-                temperature=0.5,
-                top_p=1,
-                frequency_penalty=0,
-                presence_penalty=0
-            )
-            await bot.edit_message_text(
-                message_id=message.message_id + 1,
-                chat_id=message.from_user.id,
-                text=str(completion.choices[0].text),
-                reply_markup=double_main_button()
-            )
-
+            try:
+                completion = openai.Completion.create(
+                    engine=model_engine,
+                    prompt=message.text,
+                    max_tokens=1024,
+                    temperature=0.5,
+                    top_p=1,
+                    frequency_penalty=0,
+                    presence_penalty=0
+                )
+                await bot.edit_message_text(
+                    message_id=message.message_id + 1,
+                    chat_id=message.from_user.id,
+                    text=str(completion.choices[0].text),
+                    reply_markup=double_main_button()
+                )
+            except:
+                await bot.edit_message_text(
+                    message_id=message.message_id + 1,
+                    chat_id=message.from_user.id,
+                    text='⛔ К сожалению режим ассистента не работает\n'
+                         'обратитесь к @ilpdakz',
+                    reply_markup=double_main_button()
+                )
         else:
             await bot.send_message(message.from_user.id,
                                    ' ⛔ У вас нет доступа к ассистенту',
