@@ -1,2 +1,2 @@
-# Rtu-class
+# QuickList
 бот
